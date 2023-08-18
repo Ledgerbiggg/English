@@ -1,1 +1,30 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://106.54.9.19:5432/excel_for_english
+    username: postgres
+    password: biaoge666
+  redis:
+    host: 106.54.9.19
+    port: 6379
+    password: biaoge666
+
+
+
+mybatis-plus:
+  configuration:
+    # 日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.ledger.es_test1.domain
+  mapper-locations: classpath*:mapper/*.xml
+
+
+
+
+common:
+  path: "D:\\360TEST\\"
+  fileName: ledger.xlsx
+  sheelName: "EnglishWord"
+
+
 
