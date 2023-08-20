@@ -51,6 +51,20 @@ export default {
       this.type = type;
       this.getTableData(this.count, this.type)
       this.$store.commit('search', false);
+    },
+    '$store.state.tableData'(newVal){
+      console.log("newVal",newVal)
+      if(!newVal){
+        this.getCacheData()
+        return
+      }
+      // this.tableData=newVal
+      let res={}
+      res.data={}
+      res.data.data=newVal
+      res.data.data['tableBody']=[]
+      res.data.data['tableBody'][0]=newVal
+      this.handleData(res);
     }
   },
   methods: {

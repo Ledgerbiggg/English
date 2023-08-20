@@ -8,7 +8,8 @@ export default new Vuex.Store({
     state: {
         count: 10,
         type:'所有单词',
-        search:false
+        search:false,
+        tableData:{}
     },
     mutations: {
         updateCount(state, newValue) {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
         },
         search(state, newValue){
             state.search = newValue
+        },
+        updateTableBySearch(state, newValue){
+            state.tableData = newValue
         }
     }
 })

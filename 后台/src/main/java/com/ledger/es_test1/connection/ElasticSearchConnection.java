@@ -18,9 +18,16 @@ public class ElasticSearchConnection {
         if (client == null) {
             synchronized (ElasticSearchConnection.class) {
                 if (client == null) {
-                    HttpHost http = new HttpHost("106.54.9.19", 9200, "http");
-                    RestClientBuilder builder = RestClient.builder(http);
-                    client = new RestHighLevelClient(builder);
+                    client = new RestHighLevelClient(
+                            RestClient.builder(
+                                    new HttpHost("106.54.9.19", 9200, "http"))
+                                    .setHttpClientConfigCallback(httpClientBuilder -> {
+                                        // 设置连接池的最大连接数
+                                        httpClientBuilder.setMaxConnTotal(20); // 设置最大连接数
+                                        httpClientBuilder.setMaxConnPerRoute(10); // 设置每个路由的最大连接数
+                                        return httpClientBuilder;
+                                    })
+                    );
                 }
             }
         }
@@ -28,12 +35,13 @@ public class ElasticSearchConnection {
     }
 
     public static void closeClient() {
-        if (client != null) {
-            try {
-                client.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        //不关闭连接就不会报错
+//        if (client != null) {
+//            try {
+//                client.close();
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 }
