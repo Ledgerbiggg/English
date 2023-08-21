@@ -1,6 +1,8 @@
 package com.ledger.es_test1.connection;
 
 import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -13,6 +15,8 @@ import java.io.IOException;
  **/
 public class ElasticSearchConnection {
     private volatile static RestHighLevelClient client;
+
+    private static final int CONNECTION_TIMEOUT_MS = 600000;
 
     public static RestHighLevelClient getClient() {
         if (client == null) {
@@ -32,6 +36,19 @@ public class ElasticSearchConnection {
             }
         }
         return client;
+    }
+
+    public static RequestOptions getOption() {
+
+        //配置连接超时
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(5000)
+                .setSocketTimeout(600000)
+                .build();
+
+        return RequestOptions.DEFAULT.toBuilder()
+                .setRequestConfig(requestConfig)
+                .build();
     }
 
     public static void closeClient() {

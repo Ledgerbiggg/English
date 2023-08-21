@@ -22,7 +22,7 @@ public class EnglishWords {
 
     @ColumnWidth(7)
     @ExcelProperty(value = "序号",index = 0)
-    private Integer id;
+    private String id;
 
     @ColumnWidth(7)
     @ExcelProperty(value = "分类",index = 1)
@@ -30,7 +30,7 @@ public class EnglishWords {
 
     @ColumnWidth(7)
     @ExcelProperty(value = "list",index = 2)
-    private Integer list;
+    private String list;
 
     @ColumnWidth(7)
     @ExcelProperty(value = "号",index = 3)

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> implements ExcelService {
 
     @Value("${common.path}")
@@ -41,7 +43,6 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
     public String fileName;
     @Resource
     public StringRedisTemplate stringRedisTemplate;
-
 
     @Override
     public Result<String> analyze(MultipartFile file) {
@@ -68,6 +69,7 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
     public Result<TableVo> getDataBySize(Integer size, String type) {
         ArrayList<Object> list = new ArrayList<>();
         Collections.addAll(list, "0", "1", "2", "3", "4", "5", "6");
+        //获取redis里面0-6的值
         List<String> tableHead = stringRedisTemplate
                 .opsForHash()
                 .multiGet("excel", list)

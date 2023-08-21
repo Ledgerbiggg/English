@@ -31,7 +31,7 @@ class EsUtilTest {
     @Test
     void insertDocsIntoEs() {
         ArrayList<EnglishWords> englishWords = new ArrayList<>();
-        englishWords.add(new EnglishWords(null, "english_words", 1, "english_words", "english_words", "english_words", "english_words"));
+        englishWords.add(new EnglishWords("1541414", "english_words", "1", "english_words", "english_words", "english_words", "english_words"));
         EsUtil.insertDocsIntoEs("english_words", englishWords);
     }
 
@@ -45,6 +45,8 @@ class EsUtilTest {
 
     @Test
     void deleteIndex() {
+        Boolean english_words = EsUtil.deleteIndex("english_words");
+        assert english_words;
     }
 
     @Test
@@ -57,5 +59,11 @@ class EsUtilTest {
     void test() {
         List<EnglishWords> englishWords = EsUtil.searchWordByPrefix("english_words", "wo", "word", EnglishWords.class);
         englishWords.forEach(System.out::println);
+    }
+
+    @Test
+    void deleteAllDocs() {
+        Boolean english_words = EsUtil.deleteAllDocs("english_words");
+        assert english_words.equals(true);
     }
 }

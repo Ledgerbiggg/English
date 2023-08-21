@@ -24,6 +24,8 @@ import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -65,7 +67,14 @@ public class EsUtil {
                 request.source(BeanUtil.beanToMap(entity));
                 bulkRequest.add(request);
             }
-            client.bulk(bulkRequest, RequestOptions.DEFAULT);
+            BulkResponse bulk = client.bulk(bulkRequest, ElasticSearchConnection.getOption());
+            boolean b = bulk.hasFailures();
+            if(!b){
+                System.out.println("数据处理完成");
+            }else {
+                System.out.println("数据处理失败");
+                System.out.println(bulk.buildFailureMessage());
+            }
             ElasticSearchConnection.closeClient();
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,7 +93,7 @@ public class EsUtil {
      * @param <T>   查询的泛型
      * @return 查询的泛型集合
      */
-    public static <T> List<T> SearchDocsFromEs(String index, Class<T> type, Integer from, Integer size, Map<String, String> match,String sort) {
+    public static <T> List<T> SearchDocsFromEs(String index, Class<T> type, Integer from, Integer size, Map<String, String> match, String sort) {
         // 获取连接到 Elasticsearch 的客户端
         RestHighLevelClient client = ElasticSearchConnection.getClient();
         ArrayList<T> list;
@@ -103,7 +112,7 @@ public class EsUtil {
                 searchSourceBuilder.query(boolQueryBuilder);
             }
             // 添加排序条件，根据 "price" 字段降序排序
-            if(StrUtil.isNotBlank(sort))searchSourceBuilder.sort(SortBuilders.fieldSort(sort).order(SortOrder.DESC));
+            if (StrUtil.isNotBlank(sort)) searchSourceBuilder.sort(SortBuilders.fieldSort(sort).order(SortOrder.DESC));
             // 设置分页参数，从第 0 条开始取 10 条数据
             searchSourceBuilder.from(from);
             searchSourceBuilder.size(size);
@@ -326,21 +335,22 @@ public class EsUtil {
 
     /**
      * 根据前缀查询
-     * @param index 索引
+     *
+     * @param index  索引
      * @param prefix 前缀
-     * @param filed 字段
-     * @param type 类型的类
-     * @param <T> 泛型
+     * @param filed  字段
+     * @param type   类型的类
+     * @param <T>    泛型
      * @return 数据集合
      */
-    public static <T> List<T> searchWordByPrefix(String index,String prefix,String filed,Class<T> type){
+    public static <T> List<T> searchWordByPrefix(String index, String prefix, String filed, Class<T> type) {
         RestHighLevelClient client = ElasticSearchConnection.getClient();
         try {
             //构建查询体
             SearchRequest searchRequest = new SearchRequest(index);
             searchRequest.source(new SearchSourceBuilder()
                     .query(QueryBuilders
-                            .prefixQuery(filed,prefix)));
+                            .prefixQuery(filed, prefix)));
             //查询
             SearchResponse search = client.search(searchRequest, RequestOptions.DEFAULT);
             SearchHit[] hits = search.getHits().getHits();
@@ -351,10 +361,48 @@ public class EsUtil {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("查询es数据库出错");
-        }finally {
+        } finally {
             ElasticSearchConnection.closeClient();
         }
     }
 
+    /**
+     * 删除索引里面的所有数据
+     * @param index 索引名称
+     * @return 删除的结果
+     */
+    public static Boolean deleteAllDocs(String index) {
+        RestHighLevelClient client = ElasticSearchConnection.getClient();
+        try {
+            //将查询到的数据都删除
+            DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest(index);
+            //全文匹配
+            deleteByQueryRequest.setQuery(QueryBuilders.matchAllQuery());
+            //执行删除
+            BulkByScrollResponse response = client.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
+            //失败的条数作为结果
+            return response.getBulkFailures().size() == 0;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("删除es数据失败");
+        } finally {
+            ElasticSearchConnection.closeClient();
+        }
+    }
+
+//    public static Boolean deleteIndex(String index){
+//        RestHighLevelClient client = ElasticSearchConnection.getClient();
+//
+//        try {
+//            AcknowledgedResponse delete = client.indices().delete(new DeleteIndexRequest(index), RequestOptions.DEFAULT);
+//            return delete.isAcknowledged();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("删除索引失败");
+//        }finally {
+//            ElasticSearchConnection.closeClient();
+//        }
+//
+//    }
 
 }

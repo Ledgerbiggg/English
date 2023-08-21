@@ -46,6 +46,7 @@ export default {
           if (data === null) {
             cb([{value:"查询不到结果",id:-1}])
           } else {
+            this.words=[]
             data.forEach(i => {
               this.words.push({value: i['word'],id:i['id'],...i})
             })
@@ -62,6 +63,7 @@ export default {
           if (data === null) {
             cb([{value:"查询不到结果",id:-1}])
           } else {
+            this.explanations=[]
             data.forEach(i => {
               this.explanations.push({value: i['explanation'],id:i['id'],...i})
             })
