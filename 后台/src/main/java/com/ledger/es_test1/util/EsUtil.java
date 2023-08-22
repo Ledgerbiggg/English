@@ -390,19 +390,4 @@ public class EsUtil {
         }
     }
 
-//    public static Boolean deleteIndex(String index){
-//        RestHighLevelClient client = ElasticSearchConnection.getClient();
-//
-//        try {
-//            AcknowledgedResponse delete = client.indices().delete(new DeleteIndexRequest(index), RequestOptions.DEFAULT);
-//            return delete.isAcknowledged();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("删除索引失败");
-//        }finally {
-//            ElasticSearchConnection.closeClient();
-//        }
-//
-//    }
-
 }
