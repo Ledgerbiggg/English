@@ -37,6 +37,9 @@ import java.util.stream.Collectors;
 @Transactional(rollbackFor = Exception.class)
 public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> implements ExcelService {
 
+    @Resource
+    ExcelMapper excelMapper;
+
     @Value("${common.path}")
     public String path;
     @Value("${common.fileName}")
@@ -90,10 +93,34 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
         TableVo tableVo = new TableVo();
         tableVo.setTableHead(tableHead);
         tableVo.setTableBody(collect);
+
         stringRedisTemplate.opsForValue().set("cache", JSON.toJSONString(tableVo));
-        Result<TableVo> success = Result.success(tableVo);
-        log.info("获取数据成功{}", success);
-        return success;
+        return Result.success(tableVo);
+    }
+
+    @Override
+    public Result<TableVo>  getDataBySize2(Integer size, String type) {
+        ArrayList<Object> lists = new ArrayList<>();
+        Collections.addAll(lists, "0", "1", "2", "3", "4", "5", "6");
+        List<String> tableHead = stringRedisTemplate
+                .opsForHash()
+                .multiGet("excel", lists)
+                .stream()
+                .map(o -> (String) o)
+                .collect(Collectors.toList());
+        String sort=null;
+        if(!"所有单词".equals(type)){
+            sort=type;
+        }
+        List<EnglishWords> list= excelMapper.getDataBySize2(size,sort);
+        TableVo tableVo = new TableVo();
+        tableVo.setTableHead(tableHead);
+        tableVo.setTableBody(list);
+        for (EnglishWords englishWords : list) {
+            log.info("获取数据成功{}", englishWords);
+        }
+        stringRedisTemplate.opsForValue().set("cache", JSON.toJSONString(tableVo));
+        return Result.success(tableVo);
     }
 
     @Override

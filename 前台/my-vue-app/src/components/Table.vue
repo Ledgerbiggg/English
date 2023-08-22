@@ -53,7 +53,6 @@ export default {
       this.$store.commit('search', false);
     },
     '$store.state.tableData'(newVal){
-      console.log("newVal",newVal)
       if(!newVal){
         this.getCacheData()
         return
@@ -123,6 +122,7 @@ export default {
           this.tableData = []
         })
       } else {
+        this.explanationList.splice(0,this.explanationList.length)
         for (let i = 0; i < res.data.data["tableBody"].length; i++) {
           let datumElement = res.data.data["tableBody"][i];
           datumElement['uid'] = i + 1
@@ -148,8 +148,8 @@ export default {
     },
     getTableData(size, type) {
       http.get("/getRandomData", {size: size, type: type}).then(res => {
-        this.handleData(res)
-      }).then(res => {
+        console.log("getRandomData",res.data.data)
+        this.handleData(res,true)
         this.$message.success("数据获取成功")
       })
     },
@@ -223,7 +223,7 @@ export default {
 }
 
 .el-table .warning-mid .el-table_1_column_3{
-  background: rgba(199, 8, 110, 0.3);
+  background: rgba(210, 51, 189, 0.3);
 }
 
 .el-table .warning-low .el-table_1_column_3{
@@ -231,7 +231,7 @@ export default {
 }
 
 .el-table .one-row .el-table_1_column_3{
-  background: rgba(197, 10, 10, 0.3);
+  background: rgba(215, 229, 13, 0.3);
 }
 
 .el-table .zero-row .el-table_1_column_3{

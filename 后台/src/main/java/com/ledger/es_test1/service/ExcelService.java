@@ -15,6 +15,8 @@ public interface ExcelService extends IService<EnglishWords> {
 
     Result<TableVo> getDataBySize(Integer size,String type);
 
+    Result<TableVo>  getDataBySize2(Integer size,String type);
+
     Result<String> deleteOneItem(Integer id);
 
     Result<TableVo> getCacheData();
@@ -22,4 +24,6 @@ public interface ExcelService extends IService<EnglishWords> {
     Result<List<EnglishWords>> matchWordPrefix(String prefix);
 
     Result<List<EnglishWords>> matchCNPrefix(String keyword);
+
+
 }
