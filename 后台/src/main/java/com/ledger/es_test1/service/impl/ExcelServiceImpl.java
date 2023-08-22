@@ -95,7 +95,8 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
         tableVo.setTableBody(collect);
 
         stringRedisTemplate.opsForValue().set("cache", JSON.toJSONString(tableVo));
-        return Result.success(tableVo);
+        Result<TableVo> success = Result.success(tableVo);
+        return success;
     }
 
     @Override

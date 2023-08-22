@@ -160,15 +160,15 @@ export default {
         return 'warning-mid';
       } else if (row['sort'] === '低频') {
         return 'warning-low';
-      } else if (row['sort'] === '1频词') {
+      } else if (row['sort'] === '1') {
         return 'one-row';
-      } else if (row['sort'] === '2022年真题') {
+      } else if (row['sort'] === '真') {
         return 'zero-row';
-      } else if (row['sort'] === '加分宝-0频词') {
+      } else if (row['sort'] === '0') {
         return 'baby-low';
-      } else if (row['sort'] === '加分宝-简单词') {
+      } else if (row['sort'] === '简') {
         return 'baby-easy';
-      } else if (row['sort'] === '加分宝-超纲词') {
+      } else if (row['sort'] === '超') {
         return 'baby-diff';
       }
       return '';

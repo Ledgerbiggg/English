@@ -74,23 +74,23 @@ export default {
           label: '低频',
         },
         {
-          value: '1频词',
+          value: '1',
           label: '1频词',
         },
         {
-          value: '加分宝-简单词',
-          label: '加分宝-简单词',
+          value: '简',
+          label: '简单词',
         },
         {
-          value: '加分宝-超纲词',
-          label: '加分宝-超纲词',
+          value: '超',
+          label: '超纲词',
         },
         {
-          value: '加分宝-0频词',
-          label: '加分宝-0频词',
+          value: '0',
+          label: '0频词',
         },
         {
-          value: '2022年真题',
+          value: '真',
           label: '2022年真题',
         },
       ]

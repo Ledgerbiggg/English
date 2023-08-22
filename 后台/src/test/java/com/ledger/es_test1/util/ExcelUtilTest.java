@@ -26,7 +26,7 @@ class ExcelUtilTest {
 
     @Test
     void read() {
-        ExcelUtil.read("D:\\360TEST\\words2.xlsx", EnglishWords.class, "EnglishWord", excelListener);
+        ExcelUtil.read("D:\\360TEST\\用这个.xlsx", EnglishWords.class, "EnglishWord", excelListener);
     }
 
     @Test

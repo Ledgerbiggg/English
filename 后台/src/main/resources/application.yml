@@ -28,7 +28,7 @@ mybatis-plus:
 
 
 common:
-  path: "D:\\360TEST\\"
+  path: "./"
   fileName: "ledger.xlsx"
   sheetName: "EnglishWord"
 

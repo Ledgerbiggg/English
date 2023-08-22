@@ -39,10 +39,11 @@ export default {
       this.fileList.forEach(i=>{
         formData.append('file',i.raw);
       })
-      axios.post("http://localhost:8080/saveAllExcelList",formData,{
+      axios.post("http://localhost:9999/saveAllExcelList",formData,{
         headers: this.headers,
       }).then(res=>{
         console.log(res);
+        this.$message.success('文件上传成功')
       })
     },
     handleChange (file, fileList) {

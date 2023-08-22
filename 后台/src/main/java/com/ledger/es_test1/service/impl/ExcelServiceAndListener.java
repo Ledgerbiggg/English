@@ -32,11 +32,9 @@ public class ExcelServiceAndListener {
     public String sheetName;
 
     public Result<String> analyze(MultipartFile file) {
-//        Result<String> analyze = excelService.analyze(file);
-        threadPoolExecutor.submit(()->{
-            ExcelUtil.read(path+fileName,EnglishWords.class,sheetName,excelListener);
-        });
-       return null;
+        excelService.analyze(file);
+        ExcelUtil.read(path + fileName, EnglishWords.class, sheetName, excelListener);
+        return Result.success("读取成功");
     }
 
 }

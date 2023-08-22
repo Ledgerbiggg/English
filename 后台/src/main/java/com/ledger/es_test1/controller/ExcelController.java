@@ -32,7 +32,7 @@ public class ExcelController {
 
     @GetMapping("/getRandomData")
     public Result<TableVo> getRandomData(Integer size,String type){
-        return excelService.getDataBySize(size,type);
+        return excelService.getDataBySize2(size,type);
     }
     @GetMapping("/getCacheData")
     public Result<TableVo> getCacheData(){
