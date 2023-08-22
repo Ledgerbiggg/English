@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,8 @@ public class ExcelController {
 
     @GetMapping("/getRandomData")
     public Result<TableVo> getRandomData(Integer size,String type){
-        return excelService.getDataBySize2(size,type);
+        String[] split = type.split(",");
+        return excelService.getDataBySize2(size, Arrays.asList(split));
     }
     @GetMapping("/getCacheData")
     public Result<TableVo> getCacheData(){

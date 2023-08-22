@@ -70,37 +70,36 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
 
     @Override
     public Result<TableVo> getDataBySize(Integer size, String type) {
-        ArrayList<Object> list = new ArrayList<>();
-        Collections.addAll(list, "0", "1", "2", "3", "4", "5", "6");
-        //获取redis里面0-6的值
-        List<String> tableHead = stringRedisTemplate
-                .opsForHash()
-                .multiGet("excel", list)
-                .stream()
-                .map(o -> (String) o)
-                .collect(Collectors.toList());
-        LambdaQueryWrapper<EnglishWords> wrapper = new LambdaQueryWrapper<>();
-        if (size == null || size == 0) {
-            throw new KnowException("长度不能为0或者空，你有什么大病吗");
-        }
-        List<EnglishWords> tableBody = list();
-        Collections.shuffle(tableBody);
-        List<EnglishWords> collect = tableBody
-                .stream()
-                .filter(o -> type.equals("所有单词") || o.getSort().equals(type))
-                .limit(size)
-                .collect(Collectors.toList());
-        TableVo tableVo = new TableVo();
-        tableVo.setTableHead(tableHead);
-        tableVo.setTableBody(collect);
-
-        stringRedisTemplate.opsForValue().set("cache", JSON.toJSONString(tableVo));
-        Result<TableVo> success = Result.success(tableVo);
-        return success;
+//        ArrayList<Object> list = new ArrayList<>();
+//        Collections.addAll(list, "0", "1", "2", "3", "4", "5", "6");
+//        //获取redis里面0-6的值
+//        List<String> tableHead = stringRedisTemplate
+//                .opsForHash()
+//                .multiGet("excel", list)
+//                .stream()
+//                .map(o -> (String) o)
+//                .collect(Collectors.toList());
+//        LambdaQueryWrapper<EnglishWords> wrapper = new LambdaQueryWrapper<>();
+//        if (size == null || size == 0) {
+//            throw new KnowException("长度不能为0或者空，你有什么大病吗");
+//        }
+//        List<EnglishWords> tableBody = list();
+//        Collections.shuffle(tableBody);
+//        List<EnglishWords> collect = tableBody
+//                .stream()
+//                .filter(o -> type.equals("所有单词") || o.getSort().equals(type))
+//                .limit(size)
+//                .collect(Collectors.toList());
+//        TableVo tableVo = new TableVo();
+//        tableVo.setTableHead(tableHead);
+//        tableVo.setTableBody(collect);
+//
+//        stringRedisTemplate.opsForValue().set("cache", JSON.toJSONString(tableVo));
+        return Result.success(null);
     }
 
     @Override
-    public Result<TableVo>  getDataBySize2(Integer size, String type) {
+    public Result<TableVo>  getDataBySize2(Integer size, List<String> type) {
         ArrayList<Object> lists = new ArrayList<>();
         Collections.addAll(lists, "0", "1", "2", "3", "4", "5", "6");
         List<String> tableHead = stringRedisTemplate
@@ -109,9 +108,10 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
                 .stream()
                 .map(o -> (String) o)
                 .collect(Collectors.toList());
-        String sort=null;
-        if(!"所有单词".equals(type)){
-            sort=type;
+        List<String> sort=null;
+        boolean b = type.stream().anyMatch(s -> s.equals("所有单词"));
+        if(!b){
+            sort = new ArrayList<>(type);
         }
         List<EnglishWords> list= excelMapper.getDataBySize2(size,sort);
         TableVo tableVo = new TableVo();

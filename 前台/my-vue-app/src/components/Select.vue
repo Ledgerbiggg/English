@@ -12,12 +12,14 @@
       <el-cascader
           v-model="value2"
           :options="options2"
+          :props="{ multiple: true, checkStrictly: true }"
           @change="handleChange"></el-cascader>
     </div>
     <div class="button_box">
       <el-button type="primary" @click="search">查询</el-button>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -62,7 +64,7 @@ export default {
       options2: [{
         value: '所有单词',
         label: '所有单词',
-      },{
+      }, {
         value: '高频',
         label: '高频',
       }, {
@@ -98,19 +100,19 @@ export default {
   },
   watch: {
     value1(newVal) {
-      console.log(newVal)
+      console.log('newVal',newVal)
       this.$store.commit('updateCount', newVal[0])
     },
     value2(newVal) {
-      console.log(newVal)
-      this.$store.commit('updateType', newVal[0])
+      console.log('newVal2',newVal)
+      this.$store.commit('updateType', newVal)
     }
   },
   methods: {
     search() {
       this.$store.commit('search', true);
     },
-    handleChange(value) {
+    handleChange() {
       //console.log(value);
     },
   }

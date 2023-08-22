@@ -21,6 +21,9 @@
 
 <script>
 import http from "@/js/http";
+import axios from "axios";
+import qs from 'qs'
+
 
 export default {
   data() {
@@ -47,8 +50,12 @@ export default {
       if(newVal===false) return
       let count = this.$store.state.count;
       let type = this.$store.state.type;
+      console.log("type=====",type)
       this.count = count;
-      this.type = type;
+      this.type = type.map(i => {
+        return i[0];
+      });
+      console.log("type===",this.type)
       this.getTableData(this.count, this.type)
       this.$store.commit('search', false);
     },
@@ -147,7 +154,9 @@ export default {
       })
     },
     getTableData(size, type) {
-      http.get("/getRandomData", {size: size, type: type}).then(res => {
+      console.log("type",type)
+      type=type.join(",");
+      http.get("/getRandomData", {size: size, type}).then(res => {
         console.log("getRandomData",res.data.data)
         this.handleData(res,true)
         this.$message.success("数据获取成功")

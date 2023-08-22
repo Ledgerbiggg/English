@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +27,11 @@ class ExcelServiceTest {
 
     @Test
     void testMethod2() {
-        Result<TableVo>  all = excelService.getDataBySize2(50, "所有单词");
+        ArrayList<String> list = new ArrayList<>();
+//        list.add("所有单词");
+        list.add("高频");
+        list.add("中频");
+        Result<TableVo>  all = excelService.getDataBySize2(10, list);
 
         TableVo data = all.getData();
         List<EnglishWords> tableBody = data.getTableBody();

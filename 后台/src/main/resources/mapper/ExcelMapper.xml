@@ -9,7 +9,10 @@
     <select id="getDataBySize2" resultType="com.ledger.es_test1.domain.EnglishWords">
             SELECT * FROM "english_words"
             <if test="sort">
-                WHERE "sort" = #{sort}
+            where
+                <foreach collection="sort" item="item" separator="or" >
+                    sort = #{item}
+                </foreach>
             </if>
             ORDER BY random()
             LIMIT #{size};

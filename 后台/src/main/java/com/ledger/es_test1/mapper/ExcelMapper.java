@@ -10,5 +10,5 @@ import java.util.List;
 @Mapper
 public interface ExcelMapper extends BaseMapper<EnglishWords> {
 
-    List<EnglishWords> getDataBySize2(@Param("size") Integer size, @Param("sort") String sort);
+    List<EnglishWords> getDataBySize2(@Param("size") Integer size, @Param("sort") List<String> sort);
 }
