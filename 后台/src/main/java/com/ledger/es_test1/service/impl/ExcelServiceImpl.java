@@ -29,6 +29,7 @@ import javax.annotation.Resource;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -120,7 +121,7 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
         for (EnglishWords englishWords : list) {
             log.info("获取数据成功{}", englishWords);
         }
-        stringRedisTemplate.opsForValue().set("cache", JSON.toJSONString(tableVo));
+        stringRedisTemplate.opsForValue().set("cache", JSON.toJSONString(tableVo),24, TimeUnit.HOURS);
         return Result.success(tableVo);
     }
 

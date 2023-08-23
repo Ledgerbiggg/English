@@ -44,14 +44,14 @@ public class ExcelListener extends AnalysisEventListener<EnglishWords> {
     public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
         //读取表头
         hs = headMap;
-        log.info(headMap + "");
+        log.info(headMap + "999999");
     }
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
         //读完之后的操作
         //存入表头数据到redis
-        //hs.forEach((k, v) -> stringRedisTemplate.opsForHash().put("excel", String.valueOf(k), v));
+        hs.forEach((k, v) -> stringRedisTemplate.opsForHash().put("excel", String.valueOf(k), v));
         //先删除数据库
         LambdaQueryWrapper<EnglishWords> wrapper = new LambdaQueryWrapper<>();
         excelService.remove(null);
