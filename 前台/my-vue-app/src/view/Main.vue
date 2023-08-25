@@ -20,7 +20,6 @@ import Select from "@/components/Select";
 export default {
   name: "Main",
   components: {
-
     Search,
     Upload,
     Table,
