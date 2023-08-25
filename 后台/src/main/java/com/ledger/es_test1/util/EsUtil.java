@@ -167,7 +167,6 @@ public class EsUtil {
             }
         } finally {
             ElasticSearchConnection.closeClient();
-
         }
     }
 
