@@ -172,6 +172,7 @@ public class EsUtil {
 
     /**
      * 根据id来修改文档
+     *
      * @param index  索引
      * @param id     id
      * @param entity 实体类
