@@ -172,12 +172,12 @@ public class EsUtil {
 
     /**
      * 根据id来修改文档
-     *
      * @param index  索引
      * @param id     id
      * @param entity 实体类
      * @param <T>    实体类泛型
      * @return 修改结果布尔
+     *
      */
     public static <T> Boolean updateDocInEs(String index, String id, T entity) {
         RestHighLevelClient client = ElasticSearchConnection.getClient();
