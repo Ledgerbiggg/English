@@ -1,12 +1,12 @@
 <template>
   <div class="main">
     <div class="left">
-      <Table></Table>
+      <Tab/>
     </div>
     <div class="right">
-      <Search></Search>
-      <Select></Select>
-      <Upload></Upload>
+      <Search/>
+      <Select/>
+      <Upload/>
     </div>
   </div>
 </template>
@@ -16,14 +16,15 @@ import Search from "@/components/Search";
 import Upload from "@/components/Upload"
 import Table from "@/components/Table";
 import Select from "@/components/Select";
+import Tab from "@/components/Tab.vue";
 
 export default {
   name: "Main",
   components: {
     Search,
     Upload,
-    Table,
     Select,
+    Tab,
   }
 }
 </script>
@@ -40,7 +41,8 @@ export default {
 .left {
   width: 80%;
   height: 100vh;
-  overflow-y: auto;
+  overflow: hidden;
+  //background: #000;
 }
 
 .right {

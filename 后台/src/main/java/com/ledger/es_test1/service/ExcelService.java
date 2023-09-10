@@ -17,7 +17,7 @@ public interface ExcelService extends IService<EnglishWords> {
 
     Result<TableVo>  getDataBySize2(Integer size,List<String> type);
 
-    Result<String> deleteOneItem(Integer id);
+    Result<String> deleteOneItem(String id);
 
     Result<TableVo> getCacheData();
 

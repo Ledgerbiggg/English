@@ -5,8 +5,8 @@ import axios from 'axios'
 import { Message } from 'element-ui';
 //1. 创建新的axios实例，
 const service = axios.create({
-        // baseURL: "http://localhost:9999",
-        baseURL: "http://ledger-code.buzz:9999",
+        baseURL: "http://localhost:9999",
+        // baseURL: "http://ledger-code.buzz:9999",
         // baseURL: "http://ledgerhhh-ai.top:8080",
         // baseURL: "http://ledgerhhh-ai.top:8080",
         // 超时时间 单位是ms，这里设置了3s的超时时间
@@ -27,7 +27,7 @@ service.interceptors.request.use(config => {
         //config.headers.token= token; //如果要求携带在请求头中
         //}
     const token = window.localStorage.getItem('token');
-    console.log(token);
+    // console.log(token);
     if (token) {
         //  config.params = {'token':token} //如果要求携带在参数中
         config.headers.Authorization = `Bearer ${token}`;

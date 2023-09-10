@@ -71,31 +71,6 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
 
     @Override
     public Result<TableVo> getDataBySize(Integer size, String type) {
-//        ArrayList<Object> list = new ArrayList<>();
-//        Collections.addAll(list, "0", "1", "2", "3", "4", "5", "6");
-//        //获取redis里面0-6的值
-//        List<String> tableHead = stringRedisTemplate
-//                .opsForHash()
-//                .multiGet("excel", list)
-//                .stream()
-//                .map(o -> (String) o)
-//                .collect(Collectors.toList());
-//        LambdaQueryWrapper<EnglishWords> wrapper = new LambdaQueryWrapper<>();
-//        if (size == null || size == 0) {
-//            throw new KnowException("长度不能为0或者空，你有什么大病吗");
-//        }
-//        List<EnglishWords> tableBody = list();
-//        Collections.shuffle(tableBody);
-//        List<EnglishWords> collect = tableBody
-//                .stream()
-//                .filter(o -> type.equals("所有单词") || o.getSort().equals(type))
-//                .limit(size)
-//                .collect(Collectors.toList());
-//        TableVo tableVo = new TableVo();
-//        tableVo.setTableHead(tableHead);
-//        tableVo.setTableBody(collect);
-//
-//        stringRedisTemplate.opsForValue().set("cache", JSON.toJSONString(tableVo));
         return Result.success(null);
     }
 
@@ -126,7 +101,7 @@ public class ExcelServiceImpl extends ServiceImpl<ExcelMapper, EnglishWords> imp
     }
 
     @Override
-    public Result<String> deleteOneItem(Integer id) {
+    public Result<String> deleteOneItem(String id) {
         String cache = stringRedisTemplate.opsForValue().get("cache");
         TableVo tableVo = JSON.parseObject(cache, TableVo.class);
         List<EnglishWords> tableBody;

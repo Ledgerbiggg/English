@@ -113,7 +113,7 @@ export default {
       this.$store.commit('search', true);
     },
     handleChange() {
-      //console.log(value);
+
     },
   }
 };

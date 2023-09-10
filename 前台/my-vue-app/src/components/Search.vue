@@ -41,7 +41,7 @@ export default {
   methods: {
     querySearchWord(queryString, cb) {
       if (queryString) {
-        http.get("/matchWordPrefix", {prefix: queryString}).then(res => {
+        http.get("/english/matchWordPrefix", {prefix: queryString}).then(res => {
           let data = res.data.data;
           if (data === null) {
             cb([{value:"查询不到结果",id:-1}])
@@ -58,7 +58,7 @@ export default {
     },
     querySearchExplanation(queryString, cb) {
       if (queryString) {
-        http.get("/matchCNPrefix", {keyword: queryString}).then(res => {
+        http.get("/english/matchCNPrefix", {keyword: queryString}).then(res => {
           let data = res.data.data;
           if (data === null) {
             cb([{value:"查询不到结果",id:-1}])

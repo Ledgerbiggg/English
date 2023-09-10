@@ -22,4 +22,10 @@ class BookmarkedWordServiceImplTest {
         List<BookmarkedWord> list = bookmarkedWordService.list();
         log.info("list"+list);
     }
+
+    @Test
+    void count() {
+        long count = bookmarkedWordService.count();
+        log.info("count"+count);
+    }
 }

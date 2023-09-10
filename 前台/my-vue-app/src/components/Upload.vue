@@ -39,7 +39,8 @@ export default {
       this.fileList.forEach(i=>{
         formData.append('file',i.raw);
       })
-      axios.post("http://ledger-code.buzz:9999/saveAllExcelList",formData,{
+      // axios.post("http://ledger-code.buzz:9999/english/saveAllExcelList",formData,{
+      axios.post("http://localhost:9999/english/saveAllExcelList",formData,{
         headers: this.headers,
       }).then(res=>{
         console.log(res);

@@ -1,23 +1,25 @@
 <template>
-  <div class="table">
-    <el-table
-        @header-click="handleClickHead"
-        @cell-click="handleClickBody"
-        :data="tableData"
-        style="width: 100%"
-        :row-class-name="tableRowClassName">
-      <el-table-column
-          v-for="(item,key) in tableHead" :key="key"
-          :prop="getKey(item)"
-          :label="getValue(item)"
-          hight="85px"
-          :class="getValue(item)==='删除'?'del':''"
-          :width="getValue(item)==='汉语解释' ? '350px' : '120px'">
-      </el-table-column>
-    </el-table>
-
+  <div>
+    <div class="table">
+      <el-table
+          @header-click="handleClickHead"
+          @cell-click="handleClickBody"
+          :data="tableData"
+          style="width: 100%"
+          :row-class-name="tableRowClassName">
+        <el-table-column
+            v-for="(item,key) in tableHead" :key="key"
+            :prop="getKey(item)"
+            :label="getValue(item)"
+            hight="85px"
+            :class="getValue(item)==='删除'?'del':''"
+            :width="getValue(item)==='汉语解释' ? '350px' : '120px'">
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
+
 
 <script>
 import http from "@/js/http";
@@ -30,22 +32,21 @@ export default {
         {sort: "分类"},
         {word: "单词"},
         {explanation: "汉语解释"},
-        {del: "删除"},
-        {add: "收藏"},
+        {del: "取消搜藏"},
       ],
       tableData: [],
       explanationList: [],
       explanationVisible: false,
       count: 30,
-      type: ['所有单词'],
+      type:['所有单词'],
     }
   },
   mounted() {
-    this.getCacheData()
+    this.getTableData(this.count, this.type)
   },
   watch: {
     '$store.state.search'(newVal) {
-      if (newVal === false || this.$store.state.tabIndex!==1) return
+      if (newVal === false || this.$store.state.tabIndex!==2) return
       let count = this.$store.state.count;
       let type = this.$store.state.type;
       this.count = count;
@@ -92,86 +93,43 @@ export default {
       })
     },
     handleClickBody: function (row, column, cell, event) {
-      console.log("row, column, cell, event", row, column, cell, event)
-      if (column['label'] === "删除") {
-        this.$alert(`确定删除单词${row["word"]}吗？`, '警告', {
+      console.log("row111, column, cell, event", row, column, cell, event)
+      if (column['label'] === "取消搜藏") {
+        this.$alert(`确定取消搜藏单词${row["word"]}吗？`, '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(res => {
-          http.delete("/english/deleteOneItem", {id: row['id']}).then(res => {
+          http.delete("/bookmarkedWord/deleteOneBookmarkedWord", {id: row['id']}).then(res => {
             this.explanationList.splice(row['uid'] - 1, 1)
-            this.getCacheData()
+            this.getTableData(this.count, this.type)
           });
         }).catch(res => {
           this.$message.info("取消删除")
         })
       } else if (column['label'] === "汉语解释") {
         let uid = row['uid'] - 1
+        console.log("点击汉语解释",this.explanationList[uid])
         this.tableData[uid]['explanation'] = this.tableData[uid]['explanation'] === '显示' ? this.explanationList[uid] : '显示';
-      } else if (column['label'] === "收藏") {
-        this.$alert(`确定收藏单词${row["word"]}吗?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'info'
-        }).then(res => {
-          let uid = row['uid'] - 1
-          let json = {
-            englishWordId: row['id'],
-            explanation: this.explanationList[uid],
-            word: row['word'],
-            addDate: new Date()
-          }
-          http.post("/bookmarkedWord/saveOneBookmarkedWord", json).then(res => {
-            this.$message.success("收藏成功")
-          })
-        }).catch(rea => {
-        })
-
       }
     },
     handleData(res) {
-      if (res.data.data == null || res.data.data === '') {
-        this.$alert("ops太久没有使用啦，要重新随机获取数据", "提示", {
-          confirmButtonText: '重新获取', // 确认按钮文本
-          cancelButtonText: "取消",
-          type: 'warning',
-        }).then(res => {
-          this.getTableData(this.count, this.type)
-        }).catch(res => {
-          this.tableData = []
-        })
-      } else {
         this.explanationList.splice(0, this.explanationList.length)
-        for (let i = 0; i < res.data.data["tableBody"].length; i++) {
-          let datumElement = res.data.data["tableBody"][i];
-          datumElement['uid'] = i + 1
-          datumElement['del'] = "删除"
-          datumElement['add'] = "收藏"
+        for (let i = 0; i < res.data.data.length; i++) {
+          let datumElement = res.data.data[i];
           this.explanationList.push(datumElement['explanation'])
+          datumElement['uid'] = i + 1
+          datumElement['del'] = "取消"
           datumElement['explanation'] = "显示"
         }
-        this.tableData = res.data.data["tableBody"]
-      }
+        this.tableData = res.data.data
     },
-    getCacheData() {
-      http.get("/english/getCacheData").then((res) => {
-        if (res.data.data.code !== 500) {
-          this.handleData(res)
-        } else {
-          throw new Error('Code 500 encountered');
-        }
-      }).catch(res => {
-        res.data = {}
-        res.data.data = ""
-        this.handleData(res)
-      })
-    },
+
     getTableData(size, type) {
       console.log("type", type)
       type = type.join(",");
-      http.get("/english/getRandomData", {size: size, type}).then(res => {
-        console.log("getRandomData", res.data.data)
+      http.get("/bookmarkedWord/getAllBookmarkedWord", {size: size, type}).then(res => {
+        console.log("getAllBookmarkedWord", res.data.data)
         this.handleData(res, true)
         this.$message.success("数据获取成功")
       })
@@ -214,31 +172,15 @@ export default {
   height: 84px;
 }
 
-.el-table .el-table_1_column_1 {
-  width: 30px !important;
-}
 
-.el-table .el-table_1_column_2 {
-}
-
-.el-table .el-table_1_column_3 {
-  font-weight: 800;
-}
-
-.el-table__row .el-table_1_column_4 {
-  color: #138500;
+.el-table__row .el-table_2_column_10 {
+  color: #138500!important;
   font-weight: 600;
   cursor: pointer;
 }
 
-.el-table__row .el-table_1_column_5 {
-  color: red;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.el-table__row .el-table_1_column_6 {
-  color: #ffd400;
+.el-table__row .el-table_2_column_11 {
+  color: #ffd400!important;
   font-weight: 700;
   cursor: pointer;
 }
@@ -247,39 +189,39 @@ export default {
   text-align: center !important;
 }
 
-.el-table .warning-row .el-table_1_column_3 {
+.el-table_2_column_9{
+  font-weight: 600;
+}
+.el-table .warning-row .el-table_2_column_9 {
   background: rgba(196, 11, 11, 0.3);
 }
 
-.el-table .warning-mid .el-table_1_column_3 {
+.el-table .warning-mid .el-table_2_column_9 {
   background: rgba(210, 51, 189, 0.3);
 }
 
-.el-table .warning-low .el-table_1_column_3 {
+.el-table .warning-low .el-table_2_column_9 {
   background: rgba(84, 199, 8, 0.3);
 }
 
-.el-table .one-row .el-table_1_column_3 {
+.el-table .one-row .el-table_2_column_9 {
   background: rgba(215, 229, 13, 0.3);
 }
 
-.el-table .zero-row .el-table_1_column_3 {
+.el-table .zero-row .el-table_2_column_9 {
   background: rgba(8, 199, 142, 0.3);
 }
 
-.el-table .baby-low .el-table_1_column_3 {
+.el-table .baby-low .el-table_2_column_9 {
   background: rgba(210, 186, 186, 0.3);
 }
 
-.el-table .baby-easy .el-table_1_column_3 {
+.el-table .baby-easy .el-table_2_column_9 {
   background: rgba(8, 199, 154, 0.31);
 }
 
-.el-table .baby-diff .el-table_1_column_3 {
+.el-table .baby-diff .el-table_2_column_9 {
   background: rgba(182, 8, 201, 0.3);
-}
-
-.el-table__row:hover {
 }
 
 .el-message-box__close {

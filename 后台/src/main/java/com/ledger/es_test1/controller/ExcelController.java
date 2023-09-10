@@ -22,10 +22,6 @@ public class ExcelController {
     @Resource
     private ExcelService excelService;
 
-    @GetMapping("/hello")
-    public Result<String> getHello(){
-        return Result.success("你好");
-    }
 
     @PostMapping("/saveAllExcelList")
     public Result<String> saveAllExcelList(@RequestBody MultipartFile file){
@@ -43,7 +39,7 @@ public class ExcelController {
     }
 
     @DeleteMapping("/deleteOneItem")
-    public Result<String> deleteOneItem(Integer id){
+    public Result<String> deleteOneItem(String id){
         return excelService.deleteOneItem(id);
     }
 

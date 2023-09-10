@@ -7,8 +7,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         count: 10,
-        type:'所有单词',
+        type:['所有单词'],
         search:false,
+        tabIndex:1,
         tableData:{}
     },
     mutations: {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
         },
         updateTableBySearch(state, newValue){
             state.tableData = newValue
+        },
+        changeTabIndex(state,tabIndex){
+            state.tabIndex=tabIndex
         }
     }
 })
