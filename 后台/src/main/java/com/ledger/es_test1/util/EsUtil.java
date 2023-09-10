@@ -174,7 +174,7 @@ public class EsUtil {
      * 根据id来修改文档
      * @param index  索引
      * @param id     id
-     * @param entity 实体类
+     * @param entity 实体类i
      * @param <T>    实体类泛型
      * @return 修改结果布尔
      *

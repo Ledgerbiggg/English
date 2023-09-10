@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver  # 数据库驱动类名
-    url: jdbc:postgresql://106.54.9.19:5432/excel_for_english2  # 数据库连接 URL
+    url: jdbc:postgresql://106.54.9.19:5432/excel_for_english  # 数据库连接 URL
     username: postgres  # 数据库用户名
     password: biaoge666  # 数据库密码
     hikari:
@@ -15,14 +15,14 @@ spring:
     host: 106.54.9.19
     port: 6379
     password: biaoge666
-    database: 1
+    database: 0
 server:
   port: 9999
 
 mybatis-plus:
   configuration:
-    # 日志
-    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  # 日志
   mapper-locations: classpath*:mapper/*.xml
 
 
