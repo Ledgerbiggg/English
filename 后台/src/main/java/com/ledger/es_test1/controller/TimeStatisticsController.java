@@ -4,9 +4,7 @@ import com.ledger.es_test1.domain.TimeStatistics;
 import com.ledger.es_test1.response.Result;
 import com.ledger.es_test1.service.TimeStatisticsService;
 import com.ledger.es_test1.vo.TimeVo;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,7 +21,7 @@ public class TimeStatisticsController {
        return timeStatisticsService.postTimeToCount();
     }
 
-    @PostMapping("/getRecentTime")
+    @GetMapping ("/getRecentTime")
     public Result<List<TimeVo>> getRecentTime(Integer days){
         return timeStatisticsService.getRecentTime(days);
     }

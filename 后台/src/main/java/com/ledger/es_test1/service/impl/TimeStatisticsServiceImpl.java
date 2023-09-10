@@ -32,7 +32,6 @@ public class TimeStatisticsServiceImpl extends ServiceImpl<TimeStatisticsMapper,
 
     /**
      * 增加当天的一分钟的时间
-     *
      * @return 成功
      */
     @Override
@@ -81,7 +80,4 @@ public class TimeStatisticsServiceImpl extends ServiceImpl<TimeStatisticsMapper,
         }).collect(Collectors.toList());
         return Result.success(collect);
     }
-
-
-
 }
