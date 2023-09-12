@@ -22,7 +22,7 @@ public class JwtUtil {
      *                      该值用于计算JWT的过期日期，令牌将在过期后不再有效。
      * @return 生成的JWT字符串。
      */
-    public String createJwt(Map<String, Object> claims, String secret, String subject, int expireMinutes) {
+    public static String createJwt(Map<String, Object> claims, String secret, String subject, int expireMinutes) {
 
         JwtBuilder builder = Jwts.builder()
                 .setClaims(claims)
@@ -33,7 +33,7 @@ public class JwtUtil {
         return builder.compact();
     }
 
-    public boolean validateJwt(String jwtToken, String secret) {
+    public static boolean validateJwt(String jwtToken, String secret) {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secret)

@@ -18,7 +18,6 @@ public class SecurityUserDetailServiceImpl implements UserDetailsService {
     @Resource
     private UserService userService;
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // TODO再看看有没有问题

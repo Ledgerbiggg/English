@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Objects;
 
 @Component
 @Slf4j
@@ -21,29 +22,37 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        if ("/getCaptchaCode".equals(requestURI)) {
+        if ("/login".equals(requestURI)) {
             validateCode(request, response, filterChain);
         } else {
             filterChain.doFilter(request, response);
         }
     }
+
     private void validateCode(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
+        response.setContentType("application/json;charset=utf-8");
         HttpSession session = request.getSession();
         String code = (String) session.getAttribute("code");
         String code1 = request.getParameter("code");
         session.removeAttribute("code_err");
-        if(code1==null || "".equals(code1)) {
-            session.setAttribute("code_err","验证码为空");
+        if (code1 == null || code == null) {
+            session.setAttribute("code_err", "验证码为空");
         }
-        if(!code.equals(code1)) {
-            session.setAttribute("code_err","验证码");
+        if (!Objects.equals(code, code1)) {
+            session.setAttribute("code_err", "验证码不正确");
         }
-        PrintWriter writer = response.getWriter();
-        writer.write(JSON.toJSONString(Result.fail((String) session.getAttribute("code_err"))));
-        if (code.equals(code1)) {
+        if (Objects.equals(code, code1) && code1 != null) {
+            //登录成功要把session里面的code删除
             session.removeAttribute("code");
+            //进入login
             filterChain.doFilter(request, response);
+        }else {
+            //如果验证码不一样就返回错误
+            PrintWriter writer = response.getWriter();
+            writer.write(JSON.toJSONString(Result.fail((String) session.getAttribute("code_err"),403)));
+            writer.flush();
         }
+
     }
 }

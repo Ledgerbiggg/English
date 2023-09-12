@@ -21,7 +21,7 @@ public class AppAuthenticationFailureHandler implements AuthenticationFailureHan
             throws IOException, ServletException {
         response.setContentType("application/json;charset=utf-8");
         PrintWriter writer = response.getWriter();
-        writer.write(JSON.toJSONString(Result.fail("登录失败")));
+        writer.write(JSON.toJSONString(Result.fail(403,"登录失败")));
         writer.flush();
         writer.close();
     }

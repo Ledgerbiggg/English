@@ -19,7 +19,7 @@ public class AppAccessDeniedHandler implements AccessDeniedHandler {
             throws IOException, ServletException {
         response.setContentType("application/json;charset=utf-8");
         PrintWriter writer = response.getWriter();
-        writer.write(JSON.toJSONString(Result.fail("权限不足")));
+        writer.write(JSON.toJSONString(Result.fail(403,"权限不足")));
         writer.flush();
         writer.close();
     }

@@ -2,26 +2,55 @@ package com.ledger.es_test1.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.PrintWriter;
 
-@Controller
+@RestController
 @Slf4j
 public class CaptchaController {
 
-    @GetMapping("/getCaptchaCode")
-    public void getCaptchaCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        CircleCaptcha circleCaptcha = CaptchaUtil.createCircleCaptcha(120, 60, 4, 600);
-        String code = circleCaptcha.getCode();
-        log.error(code);
-        request.getSession().setAttribute("code",code);
+    @Resource
+    private DefaultKaptcha defaultKaptcha;
+
+    //produces配合swagger在图形化界面中看到图片而不是乱码
+    @GetMapping(value = "/captcha",produces = "image/jpeg")
+    public void captcha(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("image/jpeg");
-        ImageIO.write(circleCaptcha.getImage(),"jpeg",response.getOutputStream());
+        //获取文本内容
+        String text = defaultKaptcha.createText();
+        log.warn("验证码文本内容{}", text);
+        //保存文本
+        request.getSession().setAttribute("code", text);
+        //使用文本创建图像
+        BufferedImage image = defaultKaptcha.createImage(text);
+        ServletOutputStream outputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            //输出流输出图片
+            ImageIO.write(image,"jpg",outputStream);
+            //刷新缓存
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                //关闭流
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

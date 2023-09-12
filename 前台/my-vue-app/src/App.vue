@@ -1,9 +1,8 @@
 <template>
   <div id="app">
-    <router-link to="/main">
+    <router-view>
       <Main/>
-    </router-link>
-    <router-view></router-view>
+    </router-view>
   </div>
 </template>
 
@@ -23,6 +22,8 @@ body{
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 *{
   padding: 0;
