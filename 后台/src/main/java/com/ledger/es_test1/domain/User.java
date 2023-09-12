@@ -1,12 +1,24 @@
 package com.ledger.es_test1.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
+@TableName("users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
-    private int id;
+    @TableId
+    private Integer id;
     private String username;
-    private String profileImageUrl;
-    private String description;
+    private String password;
+    private Integer role;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+
 }
