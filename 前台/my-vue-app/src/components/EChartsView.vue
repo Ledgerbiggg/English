@@ -23,7 +23,7 @@ export default {
     this.initView();
     this.Timer = setInterval(() => {
       this.countTime();
-    }, 1000)
+    }, 60000)
     this.getRecentDays();
   },
   methods: {
@@ -35,12 +35,10 @@ export default {
           this.currentCount.push(res.data.data[i]['countTime']);
           let count = 0;
           for (let j = 0; j <= i; j++) {
-            count += res.data.data[j]['countTime']
+            count += this.currentCount[j]
           }
           this.totalDuration.push(count);
         }
-        console.log("this.currentCount", this.currentCount)
-        console.log("this.totalDuration", this.totalDuration)
         this.initView()
       })
     },

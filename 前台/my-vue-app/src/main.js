@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import store from '@/js/store.js'
+import router from '@/js/router.js' // 引入路由配置
 
 import * as echarts from 'echarts';
 Vue.prototype.$echarts = echarts;
@@ -13,5 +14,6 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 new Vue({
   store,
+  router,
   render: h => h(App),
 }).$mount('#app')

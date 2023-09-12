@@ -22,14 +22,13 @@ service.interceptors.request.use(config => {
         }
         //如有需要：注意使用token的时候需要引入cookie方法或者用本地localStorage等方法，推荐js-cookie
         //const token = getCookie('名称');//这里取token之前，你肯定需要先拿到token,存一下
-        //if(token){
-        //config.params = {'token':token} //如果要求携带在参数中
-        //config.headers.token= token; //如果要求携带在请求头中
-        //}
+        // if(token){
+        // config.params = {'token':token} //如果要求携带在参数中
+        // config.headers.token= token; //如果要求携带在请求头中
+        // }
     const token = window.localStorage.getItem('token');
-    // console.log(token);
     if (token) {
-        //  config.params = {'token':token} //如果要求携带在参数中
+         // config.params = {'token':token} //如果要求携带在参数中
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config
@@ -40,7 +39,7 @@ service.interceptors.request.use(config => {
 // 3.响应拦截器
 service.interceptors.response.use(response => {
         //接收到响应数据并成功后的一些共有的处理，关闭loading等
-        let token = response.headers.get('ledger');
+        let token = response.headers.get('token');
         if (token) {
             console.log("存token");
             window.localStorage.setItem('token', token);

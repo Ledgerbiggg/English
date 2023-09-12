@@ -138,6 +138,7 @@ export default {
 .select {
   font-family: '华文楷体';
   font-weight: 600;
+  text-decoration: none!important;
 }
 
 .button_box {

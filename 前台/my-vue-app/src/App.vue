@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <Components/>
+    <router-link to="/main">
+      <Main/>
+    </router-link>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Components from '@/view/Main.vue'; // 引入子组件
+import Main from '@/view/Main.vue'; // 引入子组件
 
 export default {
   name: 'App',
   components: {
-    Components
+    Main
   }
 }
 </script>

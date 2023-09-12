@@ -23,9 +23,7 @@ class TimeStatisticsServiceImplTest {
     @Test
     void postTimeToCount() {
         Result<String> stringResult = timeStatisticsService.postTimeToCount();
-
         log.info(stringResult+"");
-
     }
 
     @Test

@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -77,6 +78,7 @@ public class TimeStatisticsServiceImpl extends ServiceImpl<TimeStatisticsMapper,
             timeVo.setHours(h + "时" + m + "分");
             return timeVo;
         }).collect(Collectors.toList());
+        Collections.reverse(collect);
         return Result.success(collect);
     }
 }

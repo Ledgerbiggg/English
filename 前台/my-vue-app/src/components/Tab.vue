@@ -10,7 +10,8 @@
       <el-tab-pane label="时长统计" name="third">
        <EChartsView/>
       </el-tab-pane>
-      <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+      <el-tab-pane label="定时任务补偿" name="fourth">
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -40,6 +41,8 @@ export default {
       }else if(this.activeName==='second'){
         this.$store.commit("changeTabIndex",2)
         this.$refs.MarkedWordTable.getTableData(999,['所有单词'])
+      }else {
+        this.$store.commit("changeTabIndex",999)
       }
     }
   },
