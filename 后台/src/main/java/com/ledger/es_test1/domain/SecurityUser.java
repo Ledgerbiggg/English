@@ -2,13 +2,16 @@ package com.ledger.es_test1.domain;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data
 public class SecurityUser implements UserDetails {
     private final User user;
+    private SimpleGrantedAuthority authorities;
 
     public SecurityUser(User user){
         this.user = user;
