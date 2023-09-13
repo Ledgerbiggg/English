@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -35,6 +37,10 @@ public class WebSecurityConfig {
     @Resource
     private ValidateCodeFilter validateCodeFilter;
 
+    @Resource
+    private CorsFilter corsFilter;
+
+
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -43,17 +49,16 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .cors().disable()
                 .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 // 配置HTTP请求的权限控制规则开始
                 .antMatchers("/captcha")
-                .permitAll()
+                .permitAll() // 允许OPTIONS请求通过
                 // 任何请求都需要经过身份验证（用户需要登录才能访问）
                 .anyRequest()
                 .authenticated()
                 // 配置HTTP请求的权限控制规则结束
-                .and()
-                .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .csrf().disable();
 
@@ -82,27 +87,6 @@ public class WebSecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-//    /**
-//     * 针对url进行拦截
-//     * @param http
-//     * @throws Exception
-//     */
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .anyRequest() //任何请求
-//                .authenticated(); //没有配置
-//        http.formLogin()
-//                //成功登录的处理器
-//                .successHandler(appAuthenticationSuccessHandler)
-//                //登录失败的处理器
-//                .failureHandler(appAuthenticationFailureHandler)
-//                .permitAll(); //允许表单登录
-//        //退出成功的处理器
-//        http.logout().logoutSuccessHandler(appLogoutSuccessHandler);
-//        //访问权限不够的处理器
-//        http.exceptionHandling().accessDeniedHandler(appAccessDeniedHandler);
-//    }
 
 
 }

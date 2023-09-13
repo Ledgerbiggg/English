@@ -3,22 +3,27 @@
   <div class="body">
     <div class="loginBox">
       <h2>login</h2>
-      <form action="">
+      <div>
         <div class="item">
-          <input type="text" required v-model="userName">
+          <input type="text" required v-model="user.userName">
           <label for="">userName</label>
         </div>
         <div class="item">
-          <input type="password" required v-model="password">
+          <input type="password" required v-model="user.password">
           <label for="">password</label>
         </div>
+        <div class="item">
+          <input type="text" required v-model="user.captcha" >
+          <label for="">captcha</label>
+        </div>
+        <img class="captcha" src="/api/captcha" @click="getCaptcha" ref="captcha">
         <button class="btn" @click="submit">submit
           <span></span>
           <span></span>
           <span></span>
           <span></span>
         </button>
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -29,14 +34,23 @@ export default {
   name: "Login",
   data(){
     return{
-      userName:"",
-      password:""
+      user:{
+        userName:"",
+        password:"",
+        captcha:""
+      },
     }
   },
+  mounted() {
+    this.getCaptcha()
+  },
   methods:{
+    getCaptcha(){
+      this.$refs.captcha.src = '/api/captcha?' + Math.random()
+    },
     submit(){
-      http.post("/login",JSON.stringify({userName:this.userName,password:this.password})).then(res=>{
-        console.log("/login",res)
+      http.post(`/api/login?code=${this.user.captcha}`,JSON.stringify({userName:this.userName,password:this.password})).then(res=>{
+        console.log("/login",res.data)
       })
     }
   }
@@ -72,14 +86,21 @@ button {
 }
 
 .loginBox {
+  position: relative;
   width: 400px;
-  height: 364px;
+  height: 464px;
   background-color: #0c1622;
   margin: 100px auto;
   border-radius: 10px;
   box-shadow: 0 15px 25px 0 rgba(0, 0, 0, .6);
   padding: 40px;
   box-sizing: border-box;
+}
+
+.captcha{
+  position: absolute;
+  transform: translate(260px, -90px);
+  cursor: pointer;
 }
 
 h2 {

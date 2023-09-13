@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Message } from 'element-ui';
 //1. 创建新的axios实例，
 const service = axios.create({
-        baseURL: "http://localhost:9999",
+        baseURL: "http://localhost:8080",
         // baseURL: "http://ledger-code.buzz:9999",
         // baseURL: "http://ledgerhhh-ai.top:8080",
         // baseURL: "http://ledgerhhh-ai.top:8080",
@@ -29,7 +29,7 @@ service.interceptors.request.use(config => {
     const token = window.localStorage.getItem('token');
     if (token) {
          // config.params = {'token':token} //如果要求携带在参数中
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = token;
     }
     return config
 }, error => {
@@ -39,7 +39,7 @@ service.interceptors.request.use(config => {
 // 3.响应拦截器
 service.interceptors.response.use(response => {
         //接收到响应数据并成功后的一些共有的处理，关闭loading等
-        let token = response.headers.get('token');
+        let token = response.headers.get('Authorization');
         if (token) {
             console.log("存token");
             window.localStorage.setItem('token', token);
