@@ -42,18 +42,18 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         if (!Objects.equals(code, code1)) {
             session.setAttribute("code_err", "验证码不正确");
         }
-        if (Objects.equals(code, code1) && code1 != null) {
-            //登录成功要把session里面的code删除
-            session.removeAttribute("code");
-            //进入login
-            log.info("验证码正确");
-            filterChain.doFilter(request, response);
-        }else {
+        if (!Objects.equals(code, code1) && code1 != null) {
             //如果验证码不一样就返回错误
             log.info("验证码不正确");
             PrintWriter writer = response.getWriter();
             writer.write(JSON.toJSONString(Result.fail((String) session.getAttribute("code_err"),403)));
             writer.flush();
+        }else {
+            //登录成功要把session里面的code删除
+            session.removeAttribute("code");
+            //进入login
+            log.info("验证码正确");
+            filterChain.doFilter(request, response);
         }
 
     }
