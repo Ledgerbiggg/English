@@ -41,7 +41,6 @@ public class WebSecurityConfig {
     private CorsFilter corsFilter;
 
 
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().antMatchers("/login");
@@ -53,7 +52,7 @@ public class WebSecurityConfig {
                 .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 // 配置HTTP请求的权限控制规则开始
-                .antMatchers("/captcha")
+                .antMatchers("/captcha","/loginUser")
                 .permitAll() // 允许OPTIONS请求通过
                 // 任何请求都需要经过身份验证（用户需要登录才能访问）
                 .anyRequest()

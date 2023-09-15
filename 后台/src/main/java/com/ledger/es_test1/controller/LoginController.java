@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.ledger.es_test1.domain.User;
 import com.ledger.es_test1.response.Result;
 
-import com.ledger.es_test1.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +17,15 @@ import java.io.PrintWriter;
 @RestController
 public class LoginController {
 
-    @Resource
-    private UserService userService;
+//    @Resource
+//    private UserService userService;
 
-    @PostMapping("/login")
+    @PostMapping("/loginUser")
     public Result<String> login(@RequestBody User user, HttpServletResponse response){
-       return userService.login(user, response);
+        // TODO 自己来
+        return Result.success("loginUser");
+
     }
+
 
 }

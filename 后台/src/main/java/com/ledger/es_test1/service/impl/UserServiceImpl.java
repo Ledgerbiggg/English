@@ -2,6 +2,7 @@ package com.ledger.es_test1.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ledger.es_test1.domain.SecurityUser;
 import com.ledger.es_test1.domain.User;
 import com.ledger.es_test1.mapper.UserMapper;
 import com.ledger.es_test1.response.Result;
@@ -9,9 +10,7 @@ import com.ledger.es_test1.response.Result;
 import com.ledger.es_test1.service.UserService;
 import com.ledger.es_test1.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +40,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Integer id = userByUsername.getId();
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("role", role);
-        String jwt = "Bearer " +JwtUtil.createJwt(claims, secret, String.valueOf(id), 60);
-        return Result.success("登录成功",jwt);
+        response.setHeader("Authorization", "Bearer " + JwtUtil.createJwt(claims,secret, String.valueOf(id), 60));
+        return Result.success("登录成功");
     }
 
     public User getUserByUsername(String username) {
