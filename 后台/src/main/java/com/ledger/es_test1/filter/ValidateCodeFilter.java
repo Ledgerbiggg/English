@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
 
-@Component
+
 @Slf4j
 public class ValidateCodeFilter extends OncePerRequestFilter {
 

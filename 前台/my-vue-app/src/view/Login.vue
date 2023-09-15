@@ -5,7 +5,7 @@
       <h2>login</h2>
       <div>
         <div class="item">
-          <input type="text" required v-model="user.userName">
+          <input type="text" required v-model="user.username">
           <label for="">userName</label>
         </div>
         <div class="item">
@@ -35,7 +35,7 @@ export default {
   data(){
     return{
       user:{
-        userName:"",
+        username:"",
         password:"",
         captcha:""
       },
@@ -49,8 +49,13 @@ export default {
       this.$refs.captcha.src = '/api/captcha?' + Math.random()
     },
     submit(){
-      http.post(`/api/loginUser?code=${this.user.captcha}`,{userName:this.userName,password:this.password}).then(res=>{
+      http.post(`/api/loginUser?code=${this.user.captcha}`,this.user).then(res=>{
         console.log("/login",res.data)
+        if(res.data.code==200){
+          this.$router.push("/main")
+        }else{
+          alert(res.data.msg)
+        }
       })
     }
   }

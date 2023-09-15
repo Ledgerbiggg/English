@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 public interface UserService  extends IService<User> {
 
     Result<String> login(User user, HttpServletResponse response);
+
+    User getUserByUsername(String username);
 }
 
 

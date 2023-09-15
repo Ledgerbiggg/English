@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,13 +15,16 @@ public class SecurityUser implements UserDetails {
     private final User user;
     private SimpleGrantedAuthority authorities;
 
-    public SecurityUser(User user){
+    public SecurityUser(User user) {
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        new SimpleGrantedAuthority(user.getRole().toString());
+        ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(authorities);
+        return grantedAuthorities;
     }
 
     @Override

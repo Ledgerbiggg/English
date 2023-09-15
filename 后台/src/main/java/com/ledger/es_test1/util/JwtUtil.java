@@ -4,34 +4,50 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Data;
 import org.joda.time.DateTime;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtil {
 
+    public static final String CLAIM_KEY_USERNAME = "sub";
+    public static final String CLAIM_KEY_CREATE = "create";
+    public static final Integer EXPIRE_TIME = 20 * 60 * 1000;
+
     /**
      * 创建一个 JSON Web Token (JWT)。
      *
-     * @param claims        包含要添加到JWT中的声明（claims）的映射。
-     *                      这些声明可以包括自定义的键值对，以提供额外的令牌信息。
      * @param secret        用于签名JWT的密钥，确保令牌的完整性和真实性。
-     * @param subject       用于标识JWT主题的字符串，通常是用户的唯一标识符。
-     * @param expireMinutes 令牌的过期时间（以分钟为单位）。
-     *                      该值用于计算JWT的过期日期，令牌将在过期后不再有效。
      * @return 生成的JWT字符串。
      */
-    public static String createJwt(Map<String, Object> claims, String secret, String subject, int expireMinutes) {
-
-        JwtBuilder builder = Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject) //用户的唯一标识符
-                .setExpiration(DateTime.now().plusMinutes(expireMinutes).toDate()) //设置过期时间
-                .signWith(SignatureAlgorithm.HS512, secret); // 加密签名
-
-        return builder.compact();
+    public static String createJwt(UserDetails userDetails, String secret) {
+        String username = userDetails.getUsername();
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_USERNAME, username);
+        claims.put(CLAIM_KEY_CREATE, new Date());
+        return createJwt(claims, secret,userDetails.getUsername());
     }
+
+    private static String createJwt(Map<String, Object> claims, String secret, String username) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setExpiration(DateTime.now().plusSeconds(EXPIRE_TIME).toDate()) //设置过期时间
+                .signWith(SignatureAlgorithm.HS512, secret) // 加密签名
+                .compact();
+    }
+
+    /**
+     * 校验jwt的生成的token
+     *
+     * @param jwtToken token
+     * @param secret   密钥
+     * @return true:校验成功;false:校验失败
+     */
 
     public static boolean validateJwt(String jwtToken, String secret) {
         try {
@@ -41,15 +57,48 @@ public class JwtUtil {
                     .getBody();
             // 在此处添加任何其他的验证逻辑，例如过期时间等
             Date expiration = claims.getExpiration();
-            Date now = new Date();
             // JWT已过期
-            return expiration == null || !expiration.before(now);
+            if (expiration == null) {
+                return false;
+            }
+            return !expiration.before(new Date());
         } catch (Exception e) {
             return false;
         }
     }
 
 
+    /**
+     * 从token中获取用户名
+     * @param jwtToken token
+     * @param secret 秘钥
+     * @return 用户名
+     */
+    public static String getUserNameFromToken(String jwtToken, String secret) {
+        Claims claimsFromToken = getClaimsFromToken(jwtToken, secret);
+        return claimsFromToken.get(CLAIM_KEY_USERNAME, String.class);
+    }
+    public static String refreshToken(String jwtToken, String secret) {
+        Claims claimsFromToken = getClaimsFromToken(jwtToken, secret);
+        return createJwt(claimsFromToken, secret, claimsFromToken.getSubject());
+    }
+
+    /**
+     * 从token中获取负载
+     * @param jwtToken token
+     * @param secret   秘钥
+     * @return 荷载
+     */
+    private static Claims getClaimsFromToken(String jwtToken, String secret) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(jwtToken)
+                    .getBody();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 }
