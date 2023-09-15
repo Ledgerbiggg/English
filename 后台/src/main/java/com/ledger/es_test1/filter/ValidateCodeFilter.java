@@ -2,10 +2,12 @@ package com.ledger.es_test1.filter;
 
 import com.alibaba.fastjson.JSON;
 import com.ledger.es_test1.response.Result;
+import com.ledger.es_test1.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,17 +20,18 @@ import java.util.Objects;
 @Component
 @Slf4j
 public class ValidateCodeFilter extends OncePerRequestFilter {
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        if ("/login".equals(requestURI)) {
+        if ("/loginUser".equals(requestURI)) {
             validateCode(request, response, filterChain);
         } else {
             filterChain.doFilter(request, response);
         }
     }
-
     private void validateCode(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         response.setContentType("application/json;charset=utf-8");

@@ -49,7 +49,7 @@ export default {
       this.$refs.captcha.src = '/api/captcha?' + Math.random()
     },
     submit(){
-      http.post(`/api/login?code=${this.user.captcha}`,JSON.stringify({userName:this.userName,password:this.password})).then(res=>{
+      http.post(`/api/loginUser?code=${this.user.captcha}`,{userName:this.userName,password:this.password}).then(res=>{
         console.log("/login",res.data)
       })
     }
