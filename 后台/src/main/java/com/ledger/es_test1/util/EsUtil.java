@@ -381,7 +381,7 @@ public class EsUtil {
             //执行删除
             BulkByScrollResponse response = client.deleteByQuery(deleteByQueryRequest, RequestOptions.DEFAULT);
             //失败的条数作为结果
-            return response.getBulkFailures().size() == 0;
+            return response.getBulkFailures().isEmpty();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("删除es数据失败");

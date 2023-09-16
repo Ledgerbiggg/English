@@ -45,7 +45,7 @@ export default {
   },
   watch: {
     '$store.state.search'(newVal) {
-      if (newVal === false || this.$store.state.tabIndex!==1) return
+      if (newVal === false || this.$store.state.tabIndex !== 1) return
       let count = this.$store.state.count;
       let type = this.$store.state.type;
       this.count = count;
@@ -123,7 +123,9 @@ export default {
             addDate: new Date()
           }
           http.post("/bookmarkedWord/saveOneBookmarkedWord", json).then(res => {
-            this.$message.success("收藏成功")
+            if (res.data.code === 200){
+              this.$message.success("收藏成功")
+            }
           })
         }).catch(rea => {
         })

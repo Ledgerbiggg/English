@@ -2,6 +2,7 @@ package com.ledger.es_test1.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.ledger.es_test1.response.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -13,13 +14,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Component
+@Slf4j
 public class AppAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
         response.setContentType("application/json;charset=utf-8");
         PrintWriter writer = response.getWriter();
-        writer.write(JSON.toJSONString(Result.fail(403,"权限不足")));
+        log.error("权限不足");
+        writer.write(JSON.toJSONString(Result.fail("权限不足,请联系ledger获取管理员权限",401)));
         writer.flush();
         writer.close();
     }

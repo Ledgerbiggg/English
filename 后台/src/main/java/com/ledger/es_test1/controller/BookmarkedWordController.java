@@ -4,6 +4,7 @@ import com.ledger.es_test1.domain.BookmarkedWord;
 import com.ledger.es_test1.domain.EnglishWords;
 import com.ledger.es_test1.response.Result;
 import com.ledger.es_test1.service.BookmarkedWordService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +27,14 @@ public class BookmarkedWordController {
     }
 
     @PostMapping("/saveOneBookmarkedWord")
+    @PreAuthorize("hasAuthority('admin')")
     public Result<String> saveOneBookmarkedWord(@RequestBody BookmarkedWord bookmarkedWord){
         boolean save = bookmarkedWordService.saveByEnglishId(bookmarkedWord);
         return Result.success(save ? "保存成功" : "保存失败");
     }
 
     @DeleteMapping("/deleteOneBookmarkedWord")
+    @PreAuthorize("hasAuthority('admin')")
     public Result<String> deleteOneBookmarkedWord(String id){
         return Result.success(bookmarkedWordService.removeEnglishWordId(id)?"删除成功":"删除失败");
     }

@@ -13,7 +13,6 @@ import java.util.List;
 @Data
 public class SecurityUser implements UserDetails {
     private final User user;
-    private SimpleGrantedAuthority authorities;
 
     public SecurityUser(User user) {
         this.user = user;
@@ -21,15 +20,15 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        new SimpleGrantedAuthority(user.getRole().toString());
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(user.getRole());
         ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(authorities);
+        grantedAuthorities.add(simpleGrantedAuthority);
         return grantedAuthorities;
     }
 
     @Override
     public String getPassword() {
-        return new BCryptPasswordEncoder().encode(user.getPassword());
+        return user.getPassword();
     }
 
     @Override

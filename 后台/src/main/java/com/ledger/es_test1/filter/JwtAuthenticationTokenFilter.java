@@ -1,15 +1,12 @@
 package com.ledger.es_test1.filter;
 
+import com.ledger.es_test1.domain.SecurityUser;
+import com.ledger.es_test1.domain.User;
 import com.ledger.es_test1.service.UserService;
-import com.ledger.es_test1.service.impl.UserServiceImpl;
 import com.ledger.es_test1.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,25 +17,40 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
+@Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+    @Resource
+    private UserService userService;
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
+    @Value("${jwt.secret}")
+    private String secret;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer")) {
-            String token = header.replace("Bearer" + " ", "");
+        if (request.getRequestURI().equals("/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        String header = request.getHeader(tokenHeader);
+        if (header != null && header.startsWith(tokenHead)) {
+            String token = header.replace(tokenHead + " ", "");
             //是否过期或者有效
-            if (JwtUtil.validateJwt(token, "ledger")) {
-                String userNameFromToken = JwtUtil.getUserNameFromToken(token, "ledger");
+            if (JwtUtil.validateJwt(token, secret)) {
+                String userNameFromToken = JwtUtil.getUserNameFromToken(token, secret);
                 if (userNameFromToken != null) {
-                    UserDetails userDetails = new UserServiceImpl().loadUserByUsername(userNameFromToken);
+                    User userByUsername = userService.getUserByUsername(userNameFromToken);
+                    SecurityUser securityUser = new SecurityUser(userByUsername);
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                            new UsernamePasswordAuthenticationToken(securityUser, null, securityUser.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     filterChain.doFilter(request, response);
-                    response.setHeader("Authorization", "Bearer" + " " + JwtUtil.refreshToken(token, "ledger"));
+                    response.setHeader(tokenHeader, tokenHead + " " + JwtUtil.refreshToken(token, secret));
                     return;
                 }
             }

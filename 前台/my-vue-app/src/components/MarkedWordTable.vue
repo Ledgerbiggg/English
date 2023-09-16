@@ -131,7 +131,6 @@ export default {
       http.get("/bookmarkedWord/getAllBookmarkedWord", {size: size, type}).then(res => {
         console.log("getAllBookmarkedWord", res.data.data)
         this.handleData(res, true)
-        this.$message.success("数据获取成功")
       })
     },
     tableRowClassName({row, rowIndex}) {

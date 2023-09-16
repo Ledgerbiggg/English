@@ -5,6 +5,7 @@ import com.ledger.es_test1.response.Result;
 import com.ledger.es_test1.service.ExcelService;
 import com.ledger.es_test1.service.impl.ExcelServiceAndListener;
 import com.ledger.es_test1.vo.TableVo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ public class ExcelController {
 
 
     @PostMapping("/saveAllExcelList")
+    @PreAuthorize("hasAuthority('admin')")
     public Result<String> saveAllExcelList(@RequestBody MultipartFile file){
         return excelServiceAndListener.analyze(file);
     }
@@ -39,6 +41,7 @@ public class ExcelController {
     }
 
     @DeleteMapping("/deleteOneItem")
+    @PreAuthorize("hasAuthority('admin')")
     public Result<String> deleteOneItem(String id){
         return excelService.deleteOneItem(id);
     }

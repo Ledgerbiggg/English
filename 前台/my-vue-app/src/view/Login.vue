@@ -1,4 +1,3 @@
-
 <template>
   <div class="body">
     <div class="loginBox">
@@ -13,7 +12,7 @@
           <label for="">password</label>
         </div>
         <div class="item">
-          <input type="text" required v-model="user.captcha" >
+          <input type="text" required v-model="user.captcha">
           <label for="">captcha</label>
         </div>
         <img class="captcha" src="/api/captcha" @click="getCaptcha" ref="captcha">
@@ -32,30 +31,31 @@ import http from "@/js/http";
 
 export default {
   name: "Login",
-  data(){
-    return{
-      user:{
-        username:"",
-        password:"",
-        captcha:""
+  data() {
+    return {
+      user: {
+        username: "",
+        password: "",
+        captcha: ""
       },
     }
   },
   mounted() {
     this.getCaptcha()
   },
-  methods:{
-    getCaptcha(){
+  methods: {
+    getCaptcha() {
       this.$refs.captcha.src = '/api/captcha?' + Math.random()
     },
-    submit(){
-      http.post(`/api/loginUser?code=${this.user.captcha}`,this.user).then(res=>{
-        console.log("/login",res.data)
-        if(res.data.code==200){
+    submit() {
+      http.post(`/login?code=${this.user.captcha}`, this.user).then(res => {
+        console.log("/login", res)
+        if (res.data.code === 200) {
           this.$router.push("/main")
-        }else{
-          alert(res.data.msg)
         }
+      }).catch(rea => {
+        console.error("rea.data", rea.data)
+        this.getCaptcha()
       })
     }
   }
@@ -102,7 +102,7 @@ button {
   box-sizing: border-box;
 }
 
-.captcha{
+.captcha {
   position: absolute;
   transform: translate(260px, -90px);
   cursor: pointer;
@@ -130,8 +130,8 @@ h2 {
   box-sizing: border-box;
 }
 
-.item input:focus+label,
-.item input:valid+label {
+.item input:focus + label,
+.item input:valid + label {
   top: 0px;
   font-size: 2px;
 }
@@ -165,11 +165,11 @@ h2 {
   transition: all 1s linear;
 }
 
-.btn>span {
+.btn > span {
   position: absolute;
 }
 
-.btn>span:nth-child(1) {
+.btn > span:nth-child(1) {
   width: 100%;
   height: 2px;
   background: -webkit-linear-gradient(left, transparent, #03e9f4);
@@ -186,7 +186,7 @@ h2 {
   }
 }
 
-.btn>span:nth-child(2) {
+.btn > span:nth-child(2) {
   width: 2px;
   height: 100%;
   background: -webkit-linear-gradient(top, transparent, #03e9f4);
@@ -203,7 +203,7 @@ h2 {
   }
 }
 
-.btn>span:nth-child(3) {
+.btn > span:nth-child(3) {
   width: 100%;
   height: 2px;
   background: -webkit-linear-gradient(left, #03e9f4, transparent);
@@ -220,7 +220,7 @@ h2 {
   }
 }
 
-.btn>span:nth-child(4) {
+.btn > span:nth-child(4) {
   width: 2px;
   height: 100%;
   background: -webkit-linear-gradient(top, transparent, #03e9f4);

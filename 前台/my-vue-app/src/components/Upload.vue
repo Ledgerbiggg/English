@@ -1,21 +1,21 @@
 <template>
-<div>
-<div class="upload-box">
-  <el-upload
-      class="upload-demo"
-      drag
-      action=""
-      accept=".xls,.xlsx"
-      :on-change="handleChange"
-      :http-request="uploadFile"
-  >
-    <i class="el-icon-upload"></i>
-    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-    <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件，且不超过500kb</div>
-  </el-upload>
-  <el-button type="primary" @click="onSubmit">上传表格</el-button>
-</div>
-</div>
+  <div>
+    <div class="upload-box">
+      <el-upload
+          class="upload-demo"
+          drag
+          action=""
+          accept=".xls,.xlsx"
+          :on-change="handleChange"
+          :http-request="uploadFile"
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">只能上传xls/xlsx文件，且不超过500kb</div>
+      </el-upload>
+      <el-button type="primary" @click="onSubmit">上传表格</el-button>
+    </div>
+  </div>
 
 </template>
 
@@ -24,34 +24,39 @@ import axios from "axios";
 
 export default {
   name: "Upload",
-  data(){
+  data() {
     return {
       fileList: [],
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
     }
   },
-  methods:{
-    onSubmit(){
-      console.log(this.fileList,"fileList")
+  methods: {
+    onSubmit() {
+      console.log(this.fileList, "fileList")
       this.$message.info('文件上传中........')
       //上传文件的需要formdata类型;所以要转
       let formData = new FormData()
-      this.fileList.forEach(i=>{
-        formData.append('file',i.raw);
+      this.fileList.forEach(i => {
+        formData.append('file', i.raw);
       })
       // axios.post("http://ledger-code.buzz:9999/english/saveAllExcelList",formData,{
-      axios.post("http://localhost:9999/english/saveAllExcelList",formData,{
+      axios.post("http://localhost:8080/api/english/saveAllExcelList", formData, {
         headers: this.headers,
-      }).then(res=>{
+      }).then(res => {
         console.log(res);
-        this.$message.success('文件上传成功')
+        if(res.data.code===200){
+          this.$message.success('文件上传成功')
+        }
       })
     },
-    handleChange (file, fileList) {
+    handleChange(file, fileList) {
       this.fileList.push(file)
-      console.log(this.fileList,"file")
+      console.log(this.fileList, "file")
     },
-    uploadFile(){
+    uploadFile() {
 
     }
 
@@ -61,7 +66,7 @@ export default {
 </script>
 
 <style scoped>
-.upload-box{
+.upload-box {
   margin-top: 100px;
   text-align: center;
 }

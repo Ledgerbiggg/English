@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class User {
     @TableId
-    private Integer id;
+    private String id;
     private String username;
     private String password;
-    private Integer role;
+    private String role;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 

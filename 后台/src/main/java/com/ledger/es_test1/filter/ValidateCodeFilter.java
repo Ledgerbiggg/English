@@ -19,6 +19,7 @@ import java.util.Objects;
 
 
 @Slf4j
+@Component
 public class ValidateCodeFilter extends OncePerRequestFilter {
 
 
@@ -26,7 +27,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        if ("/loginUser".equals(requestURI)) {
+        if ("/login".equals(requestURI)) {
             validateCode(request, response, filterChain);
         } else {
             filterChain.doFilter(request, response);
@@ -37,6 +38,8 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         response.setContentType("application/json;charset=utf-8");
         HttpSession session = request.getSession();
         String code = (String) session.getAttribute("code");
+        //验证码拿取一次就移除
+        session.removeAttribute("code");
         String code1 = request.getParameter("code");
         session.removeAttribute("code_err");
         if (code1 == null || code == null) {
@@ -49,11 +52,9 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
             //如果验证码不一样就返回错误
             log.info("验证码不正确");
             PrintWriter writer = response.getWriter();
-            writer.write(JSON.toJSONString(Result.fail((String) session.getAttribute("code_err"),403)));
+            writer.write(JSON.toJSONString(Result.fail(null,(String) session.getAttribute("code_err"),403)));
             writer.flush();
         }else {
-            //登录成功要把session里面的code删除
-            session.removeAttribute("code");
             //进入login
             log.info("验证码正确");
             filterChain.doFilter(request, response);

@@ -9,37 +9,33 @@ import com.ledger.es_test1.response.Result;
 
 import com.ledger.es_test1.service.UserService;
 import com.ledger.es_test1.util.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService {
+@Slf4j
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Value("${jwt.secret}")
     private String secret;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
-    @Resource
-    private PasswordEncoder passwordEncoder;
 
     @Override
     public Result<String> login(User user, HttpServletResponse response) {
         String username = user.getUsername();
         User userByUsername = getUserByUsername(username);
         if (userByUsername == null) {
-            return Result.fail("用户名不存在");
+            return Result.fail("用户名不存在",403);
         }
-        if (passwordEncoder.matches(user.getPassword(), userByUsername.getPassword())) {
-            return Result.fail("密码错误");
+        if (!new BCryptPasswordEncoder().matches(user.getPassword(), userByUsername.getPassword())) {
+            return Result.fail("密码错误", 403);
         }
         SecurityUser securityUser = new SecurityUser(userByUsername);
         String token = JwtUtil.createJwt(securityUser, secret);
@@ -54,10 +50,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return getOne(wrapper);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new SecurityUser(getUserByUsername(username));
-    }
 }
 
 
