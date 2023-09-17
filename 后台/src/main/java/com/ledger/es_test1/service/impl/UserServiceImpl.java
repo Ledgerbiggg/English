@@ -40,7 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         SecurityUser securityUser = new SecurityUser(userByUsername);
         String token = JwtUtil.createJwt(securityUser, secret);
         response.setHeader("Authorization", tokenHead + " " + token);
-        return Result.success("登录成功", token);
+        return Result.success("登录成功");
     }
 
     @Override

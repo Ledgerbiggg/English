@@ -33,7 +33,7 @@ class BookmarkedWordServiceImplTest {
     @Test
     void pwd() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String ledger = bCryptPasswordEncoder.encode("ledger");
+        String ledger = bCryptPasswordEncoder.encode("111");
         System.out.println("Encoded Password: " + ledger);
     }
 

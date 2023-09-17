@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ledger</groupId>
-    <artifactId>es_test1</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>english</artifactId>
+    <version>1.0</version>
     <properties>
         <java.version>11</java.version>
     </properties>

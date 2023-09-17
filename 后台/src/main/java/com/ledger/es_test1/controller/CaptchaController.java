@@ -45,13 +45,14 @@ public class CaptchaController {
             //刷新缓存
             outputStream.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             try {
                 //关闭流
+                assert outputStream != null;
                 outputStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }

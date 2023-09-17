@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,7 +60,12 @@ public class WebSecurityConfig  {
                 .csrf().disable()
                 // 配置HTTP响应头部，包括缓存控制(禁用缓存)
                 .headers()
-                .disable();
+                .disable()
+                //禁用session 的记住用户的功能
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+
 
 
         // 配置异常处理 - 设置身份验证入口点 (AuthenticationEntryPoint)
