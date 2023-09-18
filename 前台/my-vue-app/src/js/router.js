@@ -13,6 +13,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
+    mode: 'history',
     routes
 })
 
@@ -23,7 +24,10 @@ router.beforeEach((to, from, next) => {
     // 从sessionStorage中获取到保存的token值
     const tokenStr = window.localStorage.getItem('token')
     let unexpired = window.localStorage.getItem("unexpired");
-    // 没有token，强制跳转到登录页
+    // 有token，而且未过期
+    if(to.path!=='/main'){
+        return next('/login')
+    }
     if (tokenStr && unexpired) return next()
     if(tokenStr==null){
         Message.error('请先登录')

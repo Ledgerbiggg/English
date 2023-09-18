@@ -65,9 +65,6 @@ public class WebSecurityConfig  {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-
-
-
         // 配置异常处理 - 设置身份验证入口点 (AuthenticationEntryPoint)
         httpSecurity
                 .exceptionHandling()

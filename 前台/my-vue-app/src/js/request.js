@@ -8,7 +8,7 @@ import {Message} from 'element-ui';
 //1. 创建新的axios实例，
 const service = axios.create({
     baseURL: "http://localhost:8080/api",
-    // baseURL: "http://ledger-code.buzz:9999",
+    // baseURL: "http://ledger-code.buzz/api",
     // baseURL: "http://ledgerhhh-ai.top:8080",
     // baseURL: "http://ledgerhhh-ai.top:8080",
     // 超时时间 单位是ms，这里设置了3s的超时时间
@@ -46,9 +46,12 @@ service.interceptors.response.use(response => {
         window.localStorage.setItem('token', token);
         window.localStorage.setItem('unexpired', 'ledger');
     }
-    if (response.data.code === 403 || response.data.code === 401) {
-        // router.push('/login');
+    if (response.data.code === 403 ) {
         window.localStorage.removeItem("unexpired")
+        Message.error(response.data.msg)
+        return Promise.reject(response);
+    }
+    if(response.data.code === 401){
         Message.error(response.data.msg)
         return Promise.reject(response);
     }

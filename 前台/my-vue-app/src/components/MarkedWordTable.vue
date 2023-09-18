@@ -103,7 +103,9 @@ export default {
           http.delete("/bookmarkedWord/deleteOneBookmarkedWord", {id: row['id']}).then(res => {
             this.explanationList.splice(row['uid'] - 1, 1)
             this.getTableData(this.count, this.type)
-          });
+          }).catch(rea=>{
+
+          })
         }).catch(res => {
           this.$message.info("取消删除")
         })

@@ -102,7 +102,9 @@ export default {
           http.delete("/english/deleteOneItem", {id: row['id']}).then(res => {
             this.explanationList.splice(row['uid'] - 1, 1)
             this.getCacheData()
-          });
+          }).catch(rea=>{
+
+          })
         }).catch(res => {
           this.$message.info("取消删除")
         })
@@ -126,6 +128,8 @@ export default {
             if (res.data.code === 200){
               this.$message.success("收藏成功")
             }
+          }).catch(rea=>{
+
           })
         }).catch(rea => {
         })
